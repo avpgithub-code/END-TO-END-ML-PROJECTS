@@ -3,7 +3,9 @@
 #-----------------------------------------------------
 from setuptools import setup, find_packages
 from typing import List
-
+#-----------------------------------------------------
+# Constant for editable install marker
+#-----------------------------------------------------
 HYPENATE = '-e .'
 #-----------------------------------------------------
 # Function to read requirements from a file and return requirements as a list
