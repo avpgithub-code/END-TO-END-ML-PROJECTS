@@ -1,7 +1,10 @@
-#------------------------------------------------------------------
-# Exception Handling Module for the Application
-#------------------------------------------------------------------
+"""
+Exception Handling Module for the Application
+This module defines a custom exception class that captures detailed
+information about exceptions, including the type, message, filename, and line number.
+"""
 import sys
+import src.logger as app_logger
 #------------------------------------------------------------------
 # Function to generate detailed error messages
 #------------------------------------------------------------------

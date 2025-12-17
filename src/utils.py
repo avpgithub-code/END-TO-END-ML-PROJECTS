@@ -1,3 +1,8 @@
+"""
+Utility Functions Module for the Application
+This module provides utility functions used across the application,
+such as ensuring the existence of directories.
+"""
 import os
 
 def ensure_directory_exists(directory_path):

@@ -1,3 +1,7 @@
+"""
+Configuration Module for the Application
+This module defines configuration parameters used throughout the application.
+"""
 import os
 
 # Define the directory where logs should be stored

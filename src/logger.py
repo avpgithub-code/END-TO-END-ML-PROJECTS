@@ -1,3 +1,8 @@
+"""
+Logger Module for the Application
+This module sets up a logger with rotating file handlers to log messages
+to a file with a maximum size and backup count.
+"""
 import logging
 import os
 from logging.handlers import RotatingFileHandler
@@ -27,8 +32,3 @@ handler.setFormatter(formatter)
 #------------------------------------------------------------------------------
 logger.addHandler(handler)
 logger.debug("Logger initialized and ready to log messages.")
-
-if __name__ == "__main__":
-    logger.info("This is an info message for testing purposes.")
-    logger.warning("This is a warning message for testing purposes.")
-    logger.error("This is an error message for testing purposes.")
