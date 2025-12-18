@@ -23,11 +23,12 @@ load_dotenv()
 # Get data paths from environment variables
 #--------------------------------------------------------------------
 BASE_DIR = Path(__file__).resolve().parent
+DATA = (BASE_DIR / os.getenv("DATA_PATH")).resolve()
 RAW_DATA = (BASE_DIR / os.getenv("RAW_DATA_PATH")).resolve()
 TRAIN_DATA = (BASE_DIR / os.getenv("TRAIN_DATA_PATH")).resolve()
 TEST_DATA = (BASE_DIR / os.getenv("TEST_DATA_PATH")).resolve()
 #--------------------------------------------------------------------
-# Ensure necessary directories exist
+# Ensure necessary directories exist; otherwise, create them
 #--------------------------------------------------------------------
 ensure_directory_exists(RAW_DATA.parent)
 ensure_directory_exists(TRAIN_DATA.parent)
@@ -48,6 +49,7 @@ RANDOM_STATE = int(os.getenv("RANDOM_STATE", 42))
 #--------------------------------------------------------------------
 @dataclass
 class DataIngestionConfig:
+    data: str = DATA
     raw_data: str = RAW_DATA
     train_data: str = TRAIN_DATA
     test_data: str = TEST_DATA
@@ -69,6 +71,7 @@ class DataIngestion:
             logger.info("Loading Ingestion Configuration. Starting data ingestion from file...")
             # data = ingest_data_from_file(self.ingestion_config.raw_data)
             df = pd.read_csv(self.ingestion_config.raw_data)
+            df.to_csv(self.ingestion_config.data, index=False, header=False)
             logger.info("Done with Ingestion Configuration Module...")
             return df
         except Exception as e:
