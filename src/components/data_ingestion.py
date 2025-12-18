@@ -9,27 +9,45 @@ and handles exceptions using the CustomException class.
 import os, sys
 from dotenv import load_dotenv
 from pathlib import Path
-import pandas as pd
-from sklearn.model_selection import train_test_split
 from dataclasses import dataclass
 #------------------------------------------------------------------
 # Import custom exception and logger
 #------------------------------------------------------------------
 from src.exception import CustomException
 from src.logger import logger
-from src.utils import ensure_directory_exists,ingest_data_from_file
-from src.components.data_ingestion_config \
-    import DataIngestionConfig,DataIngestion,RAW_DATA,TRAIN_DATA,TEST_DATA
-
-
+from src.components.data_ingestion_config import DataIngestionConfig,DataIngestion
 #------------------------------------------------------------------
-# Example usage
+# Log module loading
+#------------------------------------------------------------------
+logger.info("Data Ingestion Module Loaded Successfully. Initiating Data Ingestion Process...")
+#------------------------------------------------------------------
+# Main execution block for data ingestion
+#------------------------------------------------------------------
 if __name__ == "__main__":
     try:
+        #----------------------------------------------------------------
+        # Initialize data ingestion configuration and class
+        #----------------------------------------------------------------
         ingestion_config = DataIngestionConfig()
         data_ingestion = DataIngestion(config=ingestion_config)
-        data = data_ingestion.initiate_data_ingestion_from_file()
-        logger.info(f"Data Read Sucessfully") 
+        #----------------------------------------------------------------
+        # Ingest data from file source and load into DataFrame
+        #----------------------------------------------------------------
+        df = data_ingestion.initiate_data_ingestion_from_file()
+        logger.info(f"Raw Data Type: {type(df)}")
+        logger.info(f"Dataframe shape: {df.shape}")
+        #----------------------------------------------------------------
+        # Split the data into Training and Testing sets
+        #----------------------------------------------------------------
+        train_data, test_data = data_ingestion.train_test_split_data(df)
+        logger.info(f"Training Data Shape: {train_data.shape}")
+        logger.info(f"Testing Data Shape: {test_data.shape}")
+        #----------------------------------------------------------------
+        # Save the training and testing data to their respective paths
+        #----------------------------------------------------------------
+        logger.info("Saving training and testing data to respective paths...")
+        train_data,test_data = data_ingestion.save_data_splits(train_data, test_data)
+        logger.info("Data ingestion process completed successfully.")
     except CustomException as ce:
         logger.error(f"An error occurred during data ingestion: {ce}")
         
