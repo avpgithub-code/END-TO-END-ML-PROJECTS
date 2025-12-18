@@ -28,19 +28,6 @@ TRAIN_DATA = (BASE_DIR / os.getenv("TRAIN_DATA_FILE")).resolve()
 TEST_DATA = (BASE_DIR / os.getenv("TEST_DATA_FILE")).resolve()
 TRANSFORMED_TRAIN_DATA = (BASE_DIR / os.getenv("TRANSFORMED_TRAIN_FILE")).resolve()
 TRANSFORMED_TEST_DATA = (BASE_DIR / os.getenv("TRANSFORMED_TEST_FILE")).resolve()
-# PROCESSED_DATA = (BASE_DIR / os.getenv("PROCESSED_DATA_PATH")).resolve
-# TRANSFORMED_DATA = (BASE_DIR / os.getenv("TRANSFORMED_FILE_PATH")).resolve()
-# PREPROCESSOR_OBJ_FILE_PATH: str = (BASE_DIR / os.getenv("PREPROCESSOR_PATH")).resolve()
-#--------------------------------------------------------------------
-# Ensure necessary directories exist; otherwise, create them
-#--------------------------------------------------------------------
-# utils.ensure_directory_exists(PROCESSED_DATA.parent)
-# utils.ensure_directory_exists(TRANSFORMED_DATA.parent)
-#--------------------------------------------------------------------
-# Log the data paths
-#--------------------------------------------------------------------
-# app_logger.info("Processed Data Path: %s", PROCESSED_DATA)
-# app_logger.info("Transformed Data Path: %s", TRANSFORMED_DATA)
 #--------------------------------------------------------------------
 # Data transformation configuration using dataclass
 #--------------------------------------------------------------------
@@ -50,8 +37,6 @@ class DataTransformationConfig:
     test_data: str = TEST_DATA
     transformed_train_data: str = TRANSFORMED_TRAIN_DATA
     transformed_test_data: str = TRANSFORMED_TEST_DATA
-    # processed_data: str = PROCESSED_DATA
-    # preprocessor_obj_file_path: str = PREPROCESSOR_OBJ_FILE_PATH
 #------------------------------------------------------------------
 # Data Transformation Class
 #------------------------------------------------------------------
