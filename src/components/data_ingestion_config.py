@@ -4,10 +4,10 @@ including paths for raw, training, and testing data.
 It uses environment variables to define these paths.
 """
 from dataclasses import dataclass
-import os,sys
+import os
+import sys
 from pathlib import Path
 from dotenv import load_dotenv
-import pandas as pd
 from sklearn.model_selection import train_test_split
 #------------------------------------------------------------------
 # Import custom exception and logger
@@ -25,8 +25,8 @@ load_dotenv()
 BASE_DIR = Path(__file__).resolve().parent
 DATA = (BASE_DIR / os.getenv("DATA_PATH")).resolve()
 RAW_DATA = (BASE_DIR / os.getenv("RAW_DATA_PATH")).resolve()
-TRAIN_DATA = (BASE_DIR / os.getenv("TRAIN_DATA_PATH")).resolve()
-TEST_DATA = (BASE_DIR / os.getenv("TEST_DATA_PATH")).resolve()
+TRAIN_DATA = (BASE_DIR / os.getenv("TRAIN_DATA_FILE")).resolve()
+TEST_DATA = (BASE_DIR / os.getenv("TEST_DATA_FILE")).resolve()
 #--------------------------------------------------------------------
 # Ensure necessary directories exist; otherwise, create them
 #--------------------------------------------------------------------
@@ -36,9 +36,9 @@ ensure_directory_exists(TEST_DATA.parent)
 #--------------------------------------------------------------------
 # Log the data paths
 #--------------------------------------------------------------------
-app_logger.info(f"Raw Data Path: {RAW_DATA}")
-app_logger.info(f"Train Data Path: {TRAIN_DATA}")
-app_logger.info(f"Test Data Path: {TEST_DATA}")
+app_logger.info("Raw Data Path: %s", RAW_DATA)
+app_logger.info("Train Data Path: %s", TRAIN_DATA)
+app_logger.info("Test Data Path: %s", TEST_DATA)
 #--------------------------------------------------------------------
 # Get Constants for data splitting
 #--------------------------------------------------------------------
@@ -87,7 +87,7 @@ class DataIngestion:
     def initiate_data_ingestion_from_db(self):
         """Initiates the data ingestion process from database."""
         try:
-            app_logger.info("Loading Ingestion Configuration. Starting data ingestion from database...")
+            app_logger.info("Starting data ingestion from database...")
             # Placeholder for database ingestion logic
             # Implement database connection and data retrieval here
             app_logger.info("Done with Ingestion Configuration Module...")
@@ -116,9 +116,9 @@ class DataIngestion:
             app_logger.info("Initiating training and testing data to respective paths...")
             train_data.to_csv(self.ingestion_config.train_data, index=False, header=False)
             test_data.to_csv(self.ingestion_config.test_data, index=False, header=False)
-            app_logger.info(f"Training data saved to: {self.ingestion_config.train_data}")
-            app_logger.info(f"Testing data saved to: {self.ingestion_config.test_data}")
-            return train_data, test_data  
+            app_logger.info("Training data saved to: %s", self.ingestion_config.train_data)
+            app_logger.info("Testing data saved to: %s", self.ingestion_config.test_data)
+            return train_data, test_data
         except Exception as e:
             exc_type, exc_value, exc_traceback = sys.exc_info()
             raise CustomException(exc_type, exc_value, exc_traceback) from e
