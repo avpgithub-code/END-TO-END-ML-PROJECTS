@@ -13,7 +13,7 @@ from sklearn.model_selection import train_test_split
 # Import custom exception and logger
 #------------------------------------------------------------------
 from src.exception import CustomException
-from src.logger import logger
+from src.logger import app_logger
 from src.utils import ensure_directory_exists,ingest_data_from_file
 #------------------------------------------------------------------
 # Load environment variables for data paths
@@ -36,11 +36,11 @@ ensure_directory_exists(TEST_DATA.parent)
 #--------------------------------------------------------------------
 # Log the data paths
 #--------------------------------------------------------------------
-logger.info(f"Raw Data Path: {RAW_DATA}")
-logger.info(f"Train Data Path: {TRAIN_DATA}")
-logger.info(f"Test Data Path: {TEST_DATA}")
+app_logger.info(f"Raw Data Path: {RAW_DATA}")
+app_logger.info(f"Train Data Path: {TRAIN_DATA}")
+app_logger.info(f"Test Data Path: {TEST_DATA}")
 #--------------------------------------------------------------------
-# Constants for data splitting
+# Get Constants for data splitting
 #--------------------------------------------------------------------
 TEST_SIZE = float(os.getenv("TEST_SIZE", 0.2))
 RANDOM_STATE = int(os.getenv("RANDOM_STATE", 42))
@@ -68,12 +68,29 @@ class DataIngestion:
             #--------------------------------------------------
             # Ingest data from the raw data file and return as DataFrame
             #--------------------------------------------------
-            logger.info("Loading Ingestion Configuration. Starting data ingestion from file...")
-            # data = ingest_data_from_file(self.ingestion_config.raw_data)
-            df = pd.read_csv(self.ingestion_config.raw_data)
+            app_logger.info("Loading Ingestion Configuration. Starting data ingestion from file...")
+            df = ingest_data_from_file(self.ingestion_config.raw_data)
+            #--------------------------------------------------
+            # Save the raw data to the specified path
+            #--------------------------------------------------
+            app_logger.info("Saving Raw data to the specified path...")
             df.to_csv(self.ingestion_config.data, index=False, header=False)
-            logger.info("Done with Ingestion Configuration Module...")
+            app_logger.info("Raw data saved to: %s", self.ingestion_config.data)
+            app_logger.info("Done with Ingestion Configuration Module...")
             return df
+        except Exception as e:
+            exc_type, exc_value, exc_traceback = sys.exc_info()
+            raise CustomException(exc_type, exc_value, exc_traceback) from e
+    #------------------------------------------------------------------
+    # Initiate data ingestion from database
+    #------------------------------------------------------------------
+    def initiate_data_ingestion_from_db(self):
+        """Initiates the data ingestion process from database."""
+        try:
+            app_logger.info("Loading Ingestion Configuration. Starting data ingestion from database...")
+            # Placeholder for database ingestion logic
+            # Implement database connection and data retrieval here
+            app_logger.info("Done with Ingestion Configuration Module...")
         except Exception as e:
             exc_type, exc_value, exc_traceback = sys.exc_info()
             raise CustomException(exc_type, exc_value, exc_traceback) from e
@@ -83,9 +100,9 @@ class DataIngestion:
     def train_test_split_data(self, data, test_size=TEST_SIZE, random_state=RANDOM_STATE):
         """Splits the data into training and testing sets."""
         try:
-            logger.info("Splitting data into training and testing sets...")
+            app_logger.info("Splitting data into training and testing sets...")
             train_data, test_data = train_test_split(data, test_size=test_size, random_state=random_state)
-            logger.info("Data split completed.")
+            app_logger.info("Data split completed.")
             return train_data, test_data
         except Exception as e:
             exc_type, exc_value, exc_traceback = sys.exc_info()
@@ -96,11 +113,11 @@ class DataIngestion:
     def save_data_splits(self, train_data, test_data):
         """Saves the training and testing data to their respective paths."""
         try:
-            logger.info("Initiating training and testing data to respective paths...")
+            app_logger.info("Initiating training and testing data to respective paths...")
             train_data.to_csv(self.ingestion_config.train_data, index=False, header=False)
             test_data.to_csv(self.ingestion_config.test_data, index=False, header=False)
-            logger.info(f"Training data saved to: {self.ingestion_config.train_data}")
-            logger.info(f"Testing data saved to: {self.ingestion_config.test_data}")
+            app_logger.info(f"Training data saved to: {self.ingestion_config.train_data}")
+            app_logger.info(f"Testing data saved to: {self.ingestion_config.test_data}")
             return train_data, test_data  
         except Exception as e:
             exc_type, exc_value, exc_traceback = sys.exc_info()

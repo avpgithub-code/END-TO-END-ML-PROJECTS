@@ -6,13 +6,14 @@ and handles exceptions using the CustomException class.
 #------------------------------------------------------------------
 # Import Modules: Custom Exception and Logger
 #------------------------------------------------------------------
+import sys
 from src.exception import CustomException
-from src.logger import logger
+from src.logger import app_logger
 from src.components.data_ingestion_config import DataIngestionConfig,DataIngestion
 #------------------------------------------------------------------
 # Log module loading
 #------------------------------------------------------------------
-logger.info("Data Ingestion Module Loaded Successfully. Initiating Data Ingestion Process...")
+app_logger.info("Data Ingestion Module Loaded Successfully. Initiating Data Ingestion Process...")
 #------------------------------------------------------------------
 # Main execution block for data ingestion
 #------------------------------------------------------------------
@@ -27,20 +28,22 @@ if __name__ == "__main__":
         # Initite data ingestion from RAW file source and return as DataFrame
         #----------------------------------------------------------------
         df = data_ingestion.initiate_data_ingestion_from_file()
-        logger.info(f"Raw Data Type: {type(df)}")
-        logger.info(f"Dataframe shape: {df.shape}")
+        app_logger.info(f"Raw Data Type: {type(df)}")
+        app_logger.info(f"Dataframe shape: {df.shape}")
         #----------------------------------------------------------------
         # Split the Dataframe into Training and Testing sets
         #----------------------------------------------------------------
         train_data, test_data = data_ingestion.train_test_split_data(df)
-        logger.info(f"Training Data Shape: {train_data.shape}")
-        logger.info(f"Testing Data Shape: {test_data.shape}")
+        app_logger.info(f"Training Data Shape: {train_data.shape}")
+        app_logger.info(f"Testing Data Shape: {test_data.shape}")
         #----------------------------------------------------------------
         # Save the training and testing data to their respective paths
         #----------------------------------------------------------------
-        logger.info("Saving training and testing data to respective paths...")
+        app_logger.info("Saving training and testing data to respective paths...")
         train_data,test_data = data_ingestion.save_data_splits(train_data, test_data)
-        logger.info("Data ingestion process completed successfully.")
+        app_logger.info("Data ingestion process completed successfully.")
     except CustomException as ce:
-        logger.error(f"An error occurred during data ingestion: {ce}")
+        app_logger.error(f"An error occurred during data ingestion: {ce}")
+        exc_type, exc_value, exc_traceback = sys.exc_info()
+        raise CustomException(exc_type, exc_value, exc_traceback) from ce
         

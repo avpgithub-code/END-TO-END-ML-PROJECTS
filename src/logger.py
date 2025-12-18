@@ -9,7 +9,6 @@ from pathlib import Path
 from dotenv import load_dotenv
 from logging.handlers import RotatingFileHandler
 from datetime import datetime
-# from src.config import LOG_DIR, LOG_FILE_MAX_BYTES, LOG_FILE_BACKUP_COUNT
 from src.utils import ensure_directory_exists
 #-----------------------------------------------------------------------------
 # Load environment variables
@@ -31,8 +30,8 @@ print(f"Log filename: {log_filename}")
 #------------------------------------------------------------------------------
 # Create a logger and a rotating file handler and a formatter
 #------------------------------------------------------------------------------
-logger = logging.getLogger('app_logger')
-logger.setLevel(logging.DEBUG)
+app_logger = logging.getLogger('app_logger')
+app_logger.setLevel(logging.DEBUG)
 handler = RotatingFileHandler(
     log_filename, 
     maxBytes=LOG_FILE_MAX_BYTES, 
@@ -44,5 +43,5 @@ handler.setFormatter(formatter)
 #------------------------------------------------------------------------------
 # Add the handler to the logger and log an initialization message
 #------------------------------------------------------------------------------
-logger.addHandler(handler)
-logger.debug("Logger initialized and ready to log messages.")
+app_logger.addHandler(handler)
+app_logger.debug("Logger initialized and ready to log messages.")
