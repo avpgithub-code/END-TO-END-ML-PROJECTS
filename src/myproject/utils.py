@@ -93,8 +93,9 @@ def create_data_transformation_pipelines(numerical_features, categorical_feature
         #----------------------------------------------------------------
         preprocessor = ColumnTransformer(
             transformers=[
-                ('num', numerical_transformer, numerical_features),
-                ('cat', categorical_transformer, categorical_features)
+                ('cat', categorical_transformer, categorical_features),
+                ('num', numerical_transformer, numerical_features)
+                
             ])
         #----------------------------------------------------------------
         logger.app_logger.info("Data transformation pipelines created successfully.")
@@ -103,3 +104,10 @@ def create_data_transformation_pipelines(numerical_features, categorical_feature
     except Exception as ce:
         exc_type, exc_value, exc_traceback = sys.exc_info()
         raise exception.CustomException(exc_type, exc_value, exc_traceback) from ce
+    
+    # def get_project_root():
+    # # Searches upward for a specific marker file
+    # for parent in Path(__file__).resolve().parents:
+    #     if (parent / ".env").exists():
+    #         return parent
+    # return Path(__file__).resolve().parent  # Fallback

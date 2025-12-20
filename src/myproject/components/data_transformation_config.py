@@ -12,27 +12,29 @@ import pandas as pd
 #------------------------------------------------------------------
 # Import custom exception and logger
 #------------------------------------------------------------------
-# from src.exception import CustomException
 import src.exception as exception
 from src.logger import app_logger
 import src.utils as utils
 #------------------------------------------------------------------
 # Load environment variables for data paths
-#------------------------------------------------------------------ 
+#------------------------------------------------------------------
 load_dotenv()
 #--------------------------------------------------------------------
 # Get data paths from environment variables
 #--------------------------------------------------------------------
 BASE_DIR = Path(__file__).resolve().parent
+TARGET_COLUMN = os.getenv("TARGET_COLUMN")
+#--------------------------------------------------------------------
 TRAIN_DATA = (BASE_DIR / os.getenv("TRAIN_DATA_FILE")).resolve()
 TEST_DATA = (BASE_DIR / os.getenv("TEST_DATA_FILE")).resolve()
 TRANSFORMED_TRAIN_DATA = (BASE_DIR / os.getenv("TRANSFORMED_TRAIN_FILE")).resolve()
 TRANSFORMED_TEST_DATA = (BASE_DIR / os.getenv("TRANSFORMED_TEST_FILE")).resolve()
 #--------------------------------------------------------------------
-# Data transformation configuration using dataclass
+# Data transformation configuration
 #--------------------------------------------------------------------
 @dataclass
 class DataTransformationConfig:
+    target_column: str = TARGET_COLUMN
     train_data: str = TRAIN_DATA
     test_data: str = TEST_DATA
     transformed_train_data: str = TRANSFORMED_TRAIN_DATA
@@ -45,7 +47,9 @@ class DataTransformation:
         self.transformation_config = config
     #--------------------------------------------------------------------
     # Initiate data transformation process
-    def get_data_transformation(self, df:pd.DataFrame) -> pd.DataFrame:
+    
+    def 
+    def prepare_for_data_transformation(self, df:pd.DataFrame) -> pd.DataFrame:
         """
         Function to initiate data transformation on the given DataFrame.
         Applies scaling and encoding as necessary.
@@ -56,9 +60,14 @@ class DataTransformation:
             #---------------------------------------------------------------------------------
             # Identify numerical and categorical columns, Create Pipelines, and fit-transform
             #---------------------------------------------------------------------------------
+            target_col = self.transformation_config.target_column
+            print(f"Target Column: {target_col}")
             numerical_features, categorical_features =  utils.list_dataframe_columns_by_type(df)
             preprocessor = utils.create_data_transformation_pipelines(numerical_features, categorical_features)
-            transformed_data = preprocessor.fit_transform(df)
+            # feature_names = preprocessor.get_feature_names_out()
+            # app_logger.info("Feature names after transformation: %s", feature_names)
+            # print(f"Feature names after transformation: {feature_names}")
+            # transformed_data = preprocessor.fit_transform(df)
             app_logger.info("Data transformation completed successfully.")
             #---------------------------------------------------------------------------------
             return pd.DataFrame(transformed_data)
@@ -81,6 +90,9 @@ class DataTransformation:
     # First initiate data transformation process by reading test and train data from artifacts
     #------------------------------------------------------------------
     def initiate_data_transformation(self, train_data,test_data):
+        #--------------------------------------------------
+        # Ingest train and test data from Artifacts
+        #--------------------------------------------------
         train_df = utils.ingest_data_from_file(train_data)
         test_df = utils.ingest_data_from_file(test_data)
         #--------------------------------------------------

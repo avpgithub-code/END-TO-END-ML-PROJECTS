@@ -27,20 +27,16 @@ if __name__ == "__main__":
         #----------------------------------------------------------------
         # Initite data ingestion from RAW file source and return as DataFrame
         #----------------------------------------------------------------
-        df = data_ingestion.initiate_data_ingestion_from_file()
-        app_logger.info("Raw Data Type: %s", type(df))
-        app_logger.info("Dataframe shape: %s", df.shape)
+        raw_df,X,y = data_ingestion.initiate_data_ingestion_from_file()
         #----------------------------------------------------------------
         # Split the Dataframe into Training and Testing sets
         #----------------------------------------------------------------
-        train_data, test_data = data_ingestion.train_test_split_data(df)
-        app_logger.info("Training Data Shape: %s", train_data.shape)
-        app_logger.info("Testing Data Shape: %s", test_data.shape)
+        (X_train, y_train), (X_val, y_val), (X_test, y_test) = data_ingestion.train_valid_test_split_data(X,y)
+        app_logger.info("Data split into training, validation and testing sets successfully.")
         #----------------------------------------------------------------
         # Save the training and testing data to their respective paths
         #----------------------------------------------------------------
-        app_logger.info("Saving training and testing data to respective paths...")
-        train_data,test_data = data_ingestion.save_data_splits(train_data, test_data)
+        data_ingestion.save_data_splits(X_train, y_train, X_val, y_val, X_test, y_test)
         app_logger.info("Data ingestion process completed successfully.")
     except CustomException as ce:
         app_logger.error("An error occurred during data ingestion: %s", ce)
