@@ -11,17 +11,30 @@ def get_project_root() -> Path:
             return parent
     # Fallback to the immediate parent if no marker is found
     return Path(__file__).resolve().parent
-
+#----------------------------------------------------------------------------------------------------
 # 1. Establish the Anchor
 PROJECT_ROOT = get_project_root()
-
+#----------------------------------------------------------------------------------------------------
 # 2. Load Environment Variables
 load_dotenv(PROJECT_ROOT / ".env")
-
+#----------------------------------------------------------------------------------------------------
 # 3. Build Paths Dynamically
 # Now, even if you move constants.py, these remain correct
 #----------------------------------------------------------------------------------------------------
 # Constants for Artifacts directories and file paths
+#----------------------------------------------------------------------------------------------------
+# 2. Filenames as Constants (Fixed Internal Standard)
+# These names are consistent for the entire team/project lifecycle
+#----------------------------------------------------------------------------------------------------
+DATA_PROCESSED_FILE = "data.csv"
+X_FILE = "X.csv"
+Y_FILE = "y.csv"
+X_TRAIN_FILE = "X_train.csv"
+Y_TRAIN_FILE = "y_train.csv"
+X_VAL_FILE = "X_val.csv"
+Y_VAL_FILE = "y_val.csv"
+X_TEST_FILE = "X_test.csv"
+Y_TEST_FILE = "y_test.csv"
 #----------------------------------------------------------------------------------------------------
 ARTIFACTS_DIR = PROJECT_ROOT / os.getenv("ARTIFACTS", "artifacts")
 ARTIFACTS_LOGS_DIR = PROJECT_ROOT / os.getenv("ARTIFACTS_LOGS", f"{os.getenv('ARTIFACTS', 'artifacts')}/logs")
@@ -42,6 +55,20 @@ SRC_MYPROJECT_COMPONENTS_DIR = PROJECT_ROOT / os.getenv("SRC_MYPROJECT_COMPONENT
 SRC_MYPROJECT_CONFIG_DIR = PROJECT_ROOT / os.getenv("SRC_MYPROJECT_CONFIG", f"{os.getenv('SRC_MYPROJECT', 'myproject')}/config")
 SRC_MYPROJECT_PIPELINES_DIR = PROJECT_ROOT / os.getenv("SRC_MYPROJECT_PIPELINES", f"{os.getenv('SRC_MYPROJECT', 'myproject')}/pipelines")
 #----------------------------------------------------------------------------------------------------
+# Example file paths using the defined constants
+#----------------------------------------------------------------------------------------------------
+DATA_PROCESSED_FILE_PATH = DATA_PROCESSED_DIR / DATA_PROCESSED_FILE
+X_FILE_PATH = DATA_PROCESSED_DIR / X_FILE
+Y_FILE_PATH = DATA_PROCESSED_DIR / Y_FILE
+X_TRAIN_FILE_PATH = DATA_PROCESSED_DIR / X_TRAIN_FILE
+Y_TRAIN_FILE_PATH = DATA_PROCESSED_DIR / Y_TRAIN_FILE
+X_VAL_FILE_PATH = DATA_PROCESSED_DIR / X_VAL_FILE
+Y_VAL_FILE_PATH = DATA_PROCESSED_DIR / Y_VAL_FILE
+X_TEST_FILE_PATH = DATA_PROCESSED_DIR / X_TEST_FILE
+Y_TEST_FILE_PATH = DATA_PROCESSED_DIR / Y_TEST_FILE
+#----------------------------------------------------------------------------------------------------
+# Print statements to verify paths (can be removed in production)
+#----------------------------------------------------------------------------------------------------
 # Example file paths
 print("Project root set to:", PROJECT_ROOT)
 print(f"Artifacts directory set to: {ARTIFACTS_DIR}")
@@ -57,7 +84,19 @@ print(f"MyProject source directory set to: {SRC_MYPROJECT_DIR}")
 print(f"MyProject components directory set to: {SRC_MYPROJECT_COMPONENTS_DIR}")
 print(f"MyProject config directory set to: {SRC_MYPROJECT_CONFIG_DIR}")
 print(f"MyProject pipelines directory set to: {SRC_MYPROJECT_PIPELINES_DIR}")
-
+#----------------------------------------------------------------------------------------------------
+# Print example file paths
+#----------------------------------------------------------------------------------------------------
+print(f"Processed data file path: {DATA_PROCESSED_FILE_PATH}")
+print(f"X file path: {X_FILE_PATH}")
+print(f"Y file path: {Y_FILE_PATH}")
+print(f"X_train file path: {X_TRAIN_FILE_PATH}")
+print(f"Y_train file path: {Y_TRAIN_FILE_PATH}")
+print(f"X_val file path: {X_VAL_FILE_PATH}")
+print(f"Y_val file path: {Y_VAL_FILE_PATH}")
+print(f"X_test file path: {X_TEST_FILE_PATH}")
+print(f"Y_test file path: {Y_TEST_FILE_PATH}")
+#----------------------------------------------------------------------------------------------------
 
 
 
