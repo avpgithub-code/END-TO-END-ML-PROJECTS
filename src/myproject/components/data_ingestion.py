@@ -7,13 +7,13 @@ and handles exceptions using the CustomException class.
 # Import Modules: Custom Exception and Logger
 #------------------------------------------------------------------
 import sys
-from src.exception import CustomException
-from src.logger import app_logger
-from src.components.data_ingestion_config import DataIngestionConfig,DataIngestion
+import src.myproject.exception as exception
+import src.myproject.logger as logger
+from src.myproject.components.data_ingestion_config import DataIngestionConfig,DataIngestion
 #------------------------------------------------------------------
 # Log module loading
 #------------------------------------------------------------------
-app_logger.info("Data Ingestion Module Loaded Successfully. Initiating Data Ingestion Process...")
+logger.app_logger.info("Data Ingestion Module Loaded Successfully. Initiating Data Ingestion Process...")
 #------------------------------------------------------------------
 # Main execution block for data ingestion
 #------------------------------------------------------------------
@@ -32,14 +32,14 @@ if __name__ == "__main__":
         # Split the Dataframe into Training and Testing sets
         #----------------------------------------------------------------
         (X_train, y_train), (X_val, y_val), (X_test, y_test) = data_ingestion.train_valid_test_split_data(X,y)
-        app_logger.info("Data split into training, validation and testing sets successfully.")
+        logger.app_logger.info("Data split into training, validation and testing sets successfully.")
         #----------------------------------------------------------------
         # Save the training and testing data to their respective paths
         #----------------------------------------------------------------
         data_ingestion.save_data_splits(X_train, y_train, X_val, y_val, X_test, y_test)
-        app_logger.info("Data ingestion process completed successfully.")
-    except CustomException as ce:
-        app_logger.error("An error occurred during data ingestion: %s", ce)
+        logger.app_logger.info("Data ingestion process completed successfully.")
+    except exception.CustomException as ce:
+        logger.app_logger.error("An error occurred during data ingestion: %s", ce)
         exc_type, exc_value, exc_traceback = sys.exc_info()
-        raise CustomException(exc_type, exc_value, exc_traceback) from ce
+        raise exception.CustomException(exc_type, exc_value, exc_traceback) from ce
         

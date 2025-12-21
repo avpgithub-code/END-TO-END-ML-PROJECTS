@@ -34,21 +34,21 @@ ARTIFACTS_DIR = (PROJECT_ROOT / "artifacts").resolve()
 LOGS_DIR = (ARTIFACTS_DIR / "logs").resolve()
 MODELS_DIR = (ARTIFACTS_DIR / "models").resolve()
 PLOTS_DIR = (ARTIFACTS_DIR / "plots").resolve()
-print(f"PROJECT_ROOT: {PROJECT_ROOT}")
-print(f"ARTIFACTS_DIR: {ARTIFACTS_DIR}")
-print(f"LOGS_DIR: {LOGS_DIR}")
-print(f"MODELS_DIR: {MODELS_DIR}")
-print(f"PLOTS_DIR: {PLOTS_DIR}")
+# print(f"PROJECT_ROOT: {PROJECT_ROOT}")
+# print(f"ARTIFACTS_DIR: {ARTIFACTS_DIR}")
+# print(f"LOGS_DIR: {LOGS_DIR}")
+# print(f"MODELS_DIR: {MODELS_DIR}")
+# print(f"PLOTS_DIR: {PLOTS_DIR}")
 #----------------------------------------------------------------------------------------------------
 DATA_DIR = (PROJECT_ROOT / "data").resolve()
 PROCESSED_DIR = (DATA_DIR / "processed").resolve()
 RAW_DIR = (DATA_DIR / "raw").resolve()
-print(f"DATA_DIR: {DATA_DIR}")
-print(f"PROCESSED_DIR: {PROCESSED_DIR}")
-print(f"RAW_DIR: {RAW_DIR}")
+# print(f"DATA_DIR: {DATA_DIR}")
+# print(f"PROCESSED_DIR: {PROCESSED_DIR}")
+# print(f"RAW_DIR: {RAW_DIR}")
 #----------------------------------------------------------------------------------------------------
 NOTEBOOKS_DIR = (PROJECT_ROOT / "notebooks").resolve()
-print(f"NOTEBOOKS_DIR: {NOTEBOOKS_DIR}")
+# print(f"NOTEBOOKS_DIR: {NOTEBOOKS_DIR}")
 #----------------------------------------------------------------------------------------------------
 SRC_DIR = (PROJECT_ROOT / "src").resolve()
 SRC_LOGS_DIR = (SRC_DIR / "logs").resolve()
@@ -56,12 +56,12 @@ SRC_MYPROJECT_DIR = (SRC_DIR / "myproject").resolve()
 SRC_COMPONENTS_DIR = (SRC_MYPROJECT_DIR / "components").resolve()
 SRC_CONFIG_DIR = (SRC_MYPROJECT_DIR / "config").resolve()
 SRC_PIPELINE_DIR = (SRC_MYPROJECT_DIR / "pipeline").resolve()
-print(f"SRC_DIR: {SRC_DIR}")
-print(f"SRC_LOGS_DIR: {SRC_LOGS_DIR}")
-print(f"SRC_MYPROJECT_DIR: {SRC_MYPROJECT_DIR}")
-print(f"SRC_COMPONENTS_DIR: {SRC_COMPONENTS_DIR}")
-print(f"SRC_CONFIG_DIR: {SRC_CONFIG_DIR}")
-print(f"SRC_PIPELINE_DIR: {SRC_PIPELINE_DIR}")
+# print(f"SRC_DIR: {SRC_DIR}")
+# print(f"SRC_LOGS_DIR: {SRC_LOGS_DIR}")
+# print(f"SRC_MYPROJECT_DIR: {SRC_MYPROJECT_DIR}")
+# print(f"SRC_COMPONENTS_DIR: {SRC_COMPONENTS_DIR}")
+# print(f"SRC_CONFIG_DIR: {SRC_CONFIG_DIR}")
+# print(f"SRC_PIPELINE_DIR: {SRC_PIPELINE_DIR}")
 #----------------------------------------------------------------------------------------------------
 # 2. Ensure Directories Exist
 #----------------------------------------------------------------------------------------------------
@@ -69,11 +69,11 @@ for directory in [ARTIFACTS_DIR, LOGS_DIR, MODELS_DIR, PLOTS_DIR, DATA_DIR, PROC
                   SRC_DIR, SRC_LOGS_DIR, SRC_MYPROJECT_DIR, SRC_COMPONENTS_DIR, SRC_CONFIG_DIR, SRC_PIPELINE_DIR]:
     directory.mkdir(parents=True, exist_ok=True)
 #----------------------------------------------------------------------------------------------------
-# 2. Load Environment Variables from .env File
+# 3. Load Environment Variables from .env File
 #----------------------------------------------------------------------------------------------------
 load_dotenv(PROJECT_ROOT / ".env")
 #----------------------------------------------------------------------------------------------------
-# 3. Canonical filename Constants (Relative to their directories)
+# 4. Canonical filename Constants (Relative to their directories)
 #----------------------------------------------------------------------------------------------------
 DATA_RAW_FILE = os.getenv("RAW_DATA_SOURCE", "stud.csv") # Default to "stud.csv" if not set
 #----------------------------------------------------------------------------------------------------
@@ -91,7 +91,7 @@ Y_TEST_FILE = "y_test.csv"
 #----------------------------------------------------------------------------------------------------
 TARGET_COLUMN="math_score"
 # #----------------------------------------------------------------------------------------------------
-# 4. Final Absolute File Paths
+# 5. Final Absolute File Paths
 #----------------------------------------------------------------------------------------------------
 DATA_RAW_FILE_AND_PATH = (RAW_DIR / DATA_RAW_FILE).resolve()
 DATA_PROCESSED_FILE_AND_PATH = (PROCESSED_DIR / DATA_PROCESSED_FILE).resolve()
@@ -103,18 +103,18 @@ X_VAL_FILE_AND_PATH = (PROCESSED_DIR / X_VAL_FILE).resolve()
 Y_VAL_FILE_AND_PATH = (PROCESSED_DIR / Y_VAL_FILE).resolve()
 X_TEST_FILE_AND_PATH = (PROCESSED_DIR / X_TEST_FILE).resolve()
 Y_TEST_FILE_AND_PATH = (PROCESSED_DIR / Y_TEST_FILE).resolve()
-print(f"DATA_RAW_FILE_AND_PATH: {DATA_RAW_FILE_AND_PATH}")
-print(f"DATA_PROCESSED_FILE_AND_PATH: {DATA_PROCESSED_FILE_AND_PATH}")
-print(f"X_FILE_AND_PATH: {X_FILE_AND_PATH}")
-print(f"Y_FILE_AND_PATH: {Y_FILE_AND_PATH}")
-print(f"X_TRAIN_FILE_AND_PATH: {X_TRAIN_FILE_AND_PATH}")
-print(f"Y_TRAIN_FILE_AND_PATH: {Y_TRAIN_FILE_AND_PATH}")
-print(f"X_VAL_FILE_AND_PATH: {X_VAL_FILE_AND_PATH}")
-print(f"Y_VAL_FILE_AND_PATH: {Y_VAL_FILE_AND_PATH}")
-print(f"X_TEST_FILE_AND_PATH: {X_TEST_FILE_AND_PATH}")
-print(f"Y_TEST_FILE_AND_PATH: {Y_TEST_FILE_AND_PATH}")
+# print(f"DATA_RAW_FILE_AND_PATH: {DATA_RAW_FILE_AND_PATH}")
+# print(f"DATA_PROCESSED_FILE_AND_PATH: {DATA_PROCESSED_FILE_AND_PATH}")
+# print(f"X_FILE_AND_PATH: {X_FILE_AND_PATH}")
+# print(f"Y_FILE_AND_PATH: {Y_FILE_AND_PATH}")
+# print(f"X_TRAIN_FILE_AND_PATH: {X_TRAIN_FILE_AND_PATH}")
+# print(f"Y_TRAIN_FILE_AND_PATH: {Y_TRAIN_FILE_AND_PATH}")
+# print(f"X_VAL_FILE_AND_PATH: {X_VAL_FILE_AND_PATH}")
+# print(f"Y_VAL_FILE_AND_PATH: {Y_VAL_FILE_AND_PATH}")
+# print(f"X_TEST_FILE_AND_PATH: {X_TEST_FILE_AND_PATH}")
+# print(f"Y_TEST_FILE_AND_PATH: {Y_TEST_FILE_AND_PATH}")
 #----------------------------------------------------------------------------------------------------
-# 5. Example of Using Environment Variables for Configurable Constants (If Needed)
+# 6. Example of Using Environment Variables for Configurable Constants (If Needed)
 #----------------------------------------------------------------------------------------------------
 # The logic: We define the constant here
 # The config: We pull the actual value from .env

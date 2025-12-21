@@ -8,10 +8,10 @@ import sys
 #------------------------------------------------------------------
 # Import custom exception and logger
 #------------------------------------------------------------------
-import src.exception as exception
-from src.logger import app_logger
-import src.utils as utils
-from src.components.data_transformation_config import DataTransformationConfig,DataTransformation
+import src.myproject.exception as exception
+from src.myproject.logger import app_logger
+import src.myproject.utils as utils
+from src.myproject.components.data_transformation_config import DataTransformationConfig,DataTransformation
 #------------------------------------------------------------------
 # Log module loading
 app_logger.info("Data Transformation Module Loaded Successfully.")

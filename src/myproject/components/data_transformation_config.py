@@ -9,36 +9,58 @@ from dataclasses import dataclass
 from pathlib import Path
 from dotenv import load_dotenv
 import pandas as pd
+import numpy as np
 #------------------------------------------------------------------
 # Import custom exception and logger
 #------------------------------------------------------------------
-import src.exception as exception
-from src.logger import app_logger
-import src.utils as utils
+import src.myproject.exception as exception
+import src.myproject.logger as logger
+import src.myproject.utils as utils
+import src.myproject.constants as constants
 #------------------------------------------------------------------
 # Load environment variables for data paths
 #------------------------------------------------------------------
 load_dotenv()
 #--------------------------------------------------------------------
-# Get data paths from environment variables
+# Get data paths from Contants Module
 #--------------------------------------------------------------------
-BASE_DIR = Path(__file__).resolve().parent
-TARGET_COLUMN = os.getenv("TARGET_COLUMN")
+ROOT_DIR = constants.PROJECT_ROOT
+TARGET_COLUMN = constants.TARGET_COLUMN
 #--------------------------------------------------------------------
-TRAIN_DATA = (BASE_DIR / os.getenv("TRAIN_DATA_FILE")).resolve()
-TEST_DATA = (BASE_DIR / os.getenv("TEST_DATA_FILE")).resolve()
-TRANSFORMED_TRAIN_DATA = (BASE_DIR / os.getenv("TRANSFORMED_TRAIN_FILE")).resolve()
-TRANSFORMED_TEST_DATA = (BASE_DIR / os.getenv("TRANSFORMED_TEST_FILE")).resolve()
+RAW_DATA = constants.DATA_RAW_FILE_AND_PATH
+PROCESSED_DATA = constants.DATA_PROCESSED_FILE_AND_PATH
+X_DATA = constants.X_FILE_AND_PATH
+Y_DATA = constants.Y_FILE_AND_PATH
+X_TRAIN_DATA = constants.X_TRAIN_FILE_AND_PATH
+Y_TRAIN_DATA = constants.Y_TRAIN_FILE_AND_PATH
+X_TEST_DATA = constants.X_TEST_FILE_AND_PATH
+Y_TEST_DATA = constants.Y_TEST_FILE_AND_PATH
+X_VAL_DATA = constants.X_VAL_FILE_AND_PATH
+Y_VAL_DATA = constants.Y_VAL_FILE_AND_PATH
+print(f"RAW_DATA: {RAW_DATA}")
+print(f"PROCESSED_DATA: {PROCESSED_DATA}")
+print(f"X_DATA: {X_DATA}")
+print(f"Y_DATA: {Y_DATA}")
+print(f"X_TRAIN_DATA: {X_TRAIN_DATA}")
+print(f"Y_TRAIN_DATA: {Y_TRAIN_DATA}")
+print(f"X_TEST_DATA: {X_TEST_DATA}")
+print(f"Y_TEST_DATA: {Y_TEST_DATA}")
+print(f"X_VAL_DATA: {X_VAL_DATA}")
+print(f"Y_VAL_DATA: {Y_VAL_DATA}")
 #--------------------------------------------------------------------
 # Data transformation configuration
 #--------------------------------------------------------------------
 @dataclass
 class DataTransformationConfig:
     target_column: str = TARGET_COLUMN
-    train_data: str = TRAIN_DATA
-    test_data: str = TEST_DATA
-    transformed_train_data: str = TRANSFORMED_TRAIN_DATA
-    transformed_test_data: str = TRANSFORMED_TEST_DATA
+    x_train_data: str = X_TRAIN_DATA
+    x_valid_data: str = X_VAL_DATA
+    x_test_data: str = X_TEST_DATA
+    y_train: str = Y_TRAIN_DATA
+    y_valid: str = Y_VAL_DATA
+    y_test: str = Y_TEST_DATA
+    x_data: str = X_DATA
+    y_data: str = Y_DATA
 #------------------------------------------------------------------
 # Data Transformation Class
 #------------------------------------------------------------------
@@ -48,7 +70,6 @@ class DataTransformation:
     #--------------------------------------------------------------------
     # Initiate data transformation process
     
-    def 
     def prepare_for_data_transformation(self, df:pd.DataFrame) -> pd.DataFrame:
         """
         Function to initiate data transformation on the given DataFrame.
@@ -56,7 +77,7 @@ class DataTransformation:
         Returns the transformed DataFrame.
         """
         try:
-            app_logger.info("Starting data transformation process...")
+            logger.app_logger.info("Starting data transformation process...")
             #---------------------------------------------------------------------------------
             # Identify numerical and categorical columns, Create Pipelines, and fit-transform
             #---------------------------------------------------------------------------------
@@ -68,7 +89,7 @@ class DataTransformation:
             # app_logger.info("Feature names after transformation: %s", feature_names)
             # print(f"Feature names after transformation: {feature_names}")
             # transformed_data = preprocessor.fit_transform(df)
-            app_logger.info("Data transformation completed successfully.")
+            logger.app_logger.info("Data transformation completed successfully.")
             #---------------------------------------------------------------------------------
             return pd.DataFrame(transformed_data)
         except Exception as ce:
@@ -80,9 +101,9 @@ class DataTransformation:
         """Saves the transformed DataFrame to the specified path."""
         try:
             transformed_train_df.to_csv(self.transformation_config.transformed_train_data, index=False,header=False)
-            app_logger.info("Transformed Train data saved to: %s", self.transformation_config.transformed_train_data)
+            logger.app_logger.info("Transformed Train data saved to: %s", self.transformation_config.transformed_train_data)
             transformed_test_df.to_csv(self.transformation_config.transformed_test_data, index=False,header=False)
-            app_logger.info("Transformed Test data saved to: %s", self.transformation_config.transformed_test_data)
+            logger.app_logger.info("Transformed Test data saved to: %s", self.transformation_config.transformed_test_data)
         except Exception as ce:
             exc_type, exc_value, exc_traceback = sys.exc_info()
             raise exception.CustomException(exc_type, exc_value, exc_traceback) from ce
