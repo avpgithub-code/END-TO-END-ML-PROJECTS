@@ -14,8 +14,8 @@ from sklearn.impute import SimpleImputer
 #------------------------------------------------------------------
 # Import custom exception and logger
 #------------------------------------------------------------------
-import src.exception as exception
-import src.logger as logger
+import src.myproject.exception as exception
+import src.myproject.logger as logger
 #--------------------------------------------------------------------
 # Ensure directory exists function
 #--------------------------------------------------------------------

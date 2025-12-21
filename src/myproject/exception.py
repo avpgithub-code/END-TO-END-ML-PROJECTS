@@ -4,7 +4,7 @@ This module defines a custom exception class that captures detailed
 information about exceptions, including the type, message, filename, and line number.
 """
 import sys
-from src.logger import app_logger
+import src.myproject.logger as logger
 #------------------------------------------------------------------
 # Function to generate detailed error messages
 #------------------------------------------------------------------
@@ -22,7 +22,7 @@ class CustomException(Exception):
     def __init__(self, exc_type, exc_value, exc_traceback):
         super().__init__(exc_value)
         self.error_message = error_message_detail(exc_type, exc_value, exc_traceback)
-        app_logger.error(self.error_message)
+        logger.app_logger.error(self.error_message)
 
     def __str__(self):
         return self.error_message
