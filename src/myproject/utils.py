@@ -7,17 +7,23 @@ import os
 from pathlib import Path
 import sys
 import pandas as pd
-from sklearn.preprocessing import StandardScaler, OneHotEncoder
 from sklearn.compose import ColumnTransformer
 from sklearn.pipeline import Pipeline
 from sklearn.impute import SimpleImputer
+from sklearn.model_selection import train_test_split
+from sklearn.preprocessing import StandardScaler, OneHotEncoder
 #------------------------------------------------------------------
 # Import custom exception and logger
 #------------------------------------------------------------------
 import src.myproject.exception as exception
-import src.myproject.logger as logger
+# import src.myproject.logger as logger
+import src.myproject.constants as constants
 #--------------------------------------------------------------------
 # Ensure directory exists function
+#--------------------------------------------------------------------
+test_size = constants.TEST_SIZE
+test_size_val = constants.TEST_SIZE_VAL
+random_state = constants.RANDOM_STATE
 #--------------------------------------------------------------------
 def ensure_directory_exists(directory_path):
     """Checks if a directory exists, and creates it if necessary."""
@@ -42,11 +48,38 @@ def ingest_data_from_file(raw_data: str):
             raise exception.CustomException(exc_type, exc_value, exc_traceback) from FileNotFoundError(f"The file {raw_data} does not exist.")
         with open(raw_data, 'r', encoding='utf-8') as file:
             df = pd.read_csv(file)
-            logger.app_logger.info("Data ingested successfully from %s", raw_data)
+            # logger.app_logger.info("Data ingested successfully from %s", raw_data)
             return df
     except exception.CustomException as ce:
         exc_type, exc_value, exc_traceback = sys.exc_info()
         raise exception.CustomException(exc_type, exc_value, exc_traceback) from ce
+#--------------------------------------------------------------------
+# Train-Test Split Function
+#--------------------------------------------------------------------
+def train_valid_test_split_data(self, X, y, test_size=test_size, random_state=random_state):
+    """Splits the data into training and testing sets."""
+    try:
+        #--------------------------------------------------
+        # 1. First Split: Isolate the final 'Test' set (e.g., 20% of total data)
+        # Use 'stratify' to ensure class proportions are kept across splits
+        #--------------------------------------------------
+        # logger.app_logger.info("Splitting X into X_train_full and X_test...")
+        X_train_full, X_test, y_train_full, y_test = train_test_split(
+            X, y, test_size=test_size, random_state=random_state
+        )
+        #--------------------------------------------------
+        # 3. Second Split: Divide the 'Train-Full' set into 'Train' and 'Validation'
+        # To get a 60/20/20 overall split, we take 25% of the remaining 80% (0.25 * 0.80 = 0.20)
+        #--------------------------------------------------
+        # logger.app_logger.info("Splitting X_train_full into X_train and X_val...")
+        X_train, X_val, y_train, y_val = train_test_split(
+            X_train_full, y_train_full, test_size=test_size_val, random_state=random_state
+        )
+        # logger.app_logger.info("Data split completed.")
+        return (X_train, y_train), (X_val, y_val), (X_test, y_test)
+    except Exception as e:
+        exc_type, exc_value, exc_traceback = sys.exc_info()
+        raise exception.CustomException(exc_type, exc_value, exc_traceback) from e
 #--------------------------------------------------------------------
 # List Dataframe Columns by Type
 #--------------------------------------------------------------------
@@ -73,7 +106,7 @@ def create_data_transformation_pipelines(numerical_features, categorical_feature
     Creates and returns data transformation pipelines for numerical and categorical features.
     """
     try:
-        logger.app_logger.info("Creating Numerical and Categorical data transformation pipelines...")
+        # logger.app_logger.info("Creating Numerical and Categorical data transformation pipelines...")
         #----------------------------------------------------------------
         # Define transformers for numerical and categorical features
         #----------------------------------------------------------------
@@ -89,7 +122,7 @@ def create_data_transformation_pipelines(numerical_features, categorical_feature
         #----------------------------------------------------------------
         # Combine transformers into a ColumnTransformer
         #----------------------------------------------------------------
-        logger.app_logger.info("Combining transformers into a ColumnTransformer...")
+        # logger.app_logger.info("Combining transformers into a ColumnTransformer...")
         #----------------------------------------------------------------
         preprocessor = ColumnTransformer(
             transformers=[
@@ -98,7 +131,7 @@ def create_data_transformation_pipelines(numerical_features, categorical_feature
                 
             ])
         #----------------------------------------------------------------
-        logger.app_logger.info("Data transformation pipelines created successfully.")
+        # logger.app_logger.info("Data transformation pipelines created successfully.")
         #----------------------------------------------------------------
         return preprocessor
     except Exception as ce:

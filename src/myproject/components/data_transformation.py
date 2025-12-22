@@ -11,7 +11,7 @@ import sys
 import src.myproject.exception as exception
 from src.myproject.logger import app_logger
 import src.myproject.utils as utils
-from src.myproject.components.data_transformation_config import DataTransformationConfig,DataTransformation
+from src.myproject.components.data_transformation_config_old import DataTransformationConfig,DataTransformation
 #------------------------------------------------------------------
 # Log module loading
 app_logger.info("Data Transformation Module Loaded Successfully.")

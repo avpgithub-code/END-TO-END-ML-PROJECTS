@@ -1,3 +1,4 @@
+gender,race_ethnicity,parental_level_of_education,lunch,test_preparation_course,reading_score,writing_score
 female,group E,associate's degree,standard,completed,75,77
 female,group C,associate's degree,standard,none,66,67
 female,group C,bachelor's degree,standard,none,75,81

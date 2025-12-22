@@ -3,11 +3,9 @@ This module sets up the configuration for data ingestion,
 including paths for raw, training, and testing data.
 It uses environment variables to define these paths.
 """
-from dataclasses import dataclass
-import os
-import sys
-from pathlib import Path
-from dotenv import load_dotenv
+import pandas as pd
+from sklearn.model_selection import train_test_split
+from src.myproject.config.config_app import DataIngestionConfig
 from sklearn.model_selection import train_test_split
 #------------------------------------------------------------------
 # Import custom exception and logger
@@ -19,7 +17,7 @@ import src.myproject.constants as constants
 #------------------------------------------------------------------
 # Load environment variables for data paths
 #------------------------------------------------------------------
-load_dotenv()
+# load_dotenv()
 #--------------------------------------------------------------------
 # Get data paths from environment variables
 #--------------------------------------------------------------------
@@ -71,16 +69,17 @@ class DataIngestionConfig:
         y_val_data (str): Path to the validation target feature data file.
         y_test_data (str): Path to the testing target feature data file.
     """
-    raw_data: str = RAW_DATA
-    data: str = DATA
-    input_feature_data: str = INPUT_FEATURE_DATA
-    target_feature_data: str = TARGET_FEATURE_DATA
-    x_train_data: str = X_TRAIN_DATA
-    x_val_data: str = X_VAL_DATA
-    x_test_data: str = X_TEST_DATA
-    y_train_data: str = Y_TRAIN_DATA
-    y_val_data: str = Y_VAL_DATA
-    y_test_data: str = Y_TEST_DATA
+    raw_path: str = constants.RAW_DIR
+    raw_data: str = constants.DATA_RAW_FILE_AND_PATH
+    data: str = constants.DATA_PROCESSED_FILE_AND_PATH
+    input_feature_data: str = constants.X_FILE_AND_PATH
+    target_feature_data: str = constants.Y_FILE_AND_PATH
+    x_train_data: str = constants.X_TRAIN_FILE_AND_PATH
+    x_val_data: str = constants.X_VAL_FILE_AND_PATH
+    x_test_data: str = constants.X_TEST_FILE_AND_PATH
+    y_train_data: str = constants.Y_TRAIN_FILE_AND_PATH
+    y_val_data: str = constants.Y_VAL_FILE_AND_PATH
+    y_test_data: str = constants.Y_TEST_FILE_AND_PATH
 #------------------------------------------------------------------
 # Data Ingestion Class
 #------------------------------------------------------------------

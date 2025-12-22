@@ -18,17 +18,16 @@ import src.myproject.logger as logger
 import src.myproject.utils as utils
 import src.myproject.constants as constants
 #------------------------------------------------------------------
-# Load environment variables for data paths
-#------------------------------------------------------------------
-load_dotenv()
-#--------------------------------------------------------------------
 # Get data paths from Contants Module
 #--------------------------------------------------------------------
 ROOT_DIR = constants.PROJECT_ROOT
 TARGET_COLUMN = constants.TARGET_COLUMN
+MODEL_DIR = constants.MODELS_DIR
+LOG_DIR = constants.LOGS_DIR
 #--------------------------------------------------------------------
 RAW_DATA = constants.DATA_RAW_FILE_AND_PATH
 PROCESSED_DATA = constants.DATA_PROCESSED_FILE_AND_PATH
+PIKLE_FILE = constants.PIKLE_FILE_AND_PATH
 X_DATA = constants.X_FILE_AND_PATH
 Y_DATA = constants.Y_FILE_AND_PATH
 X_TRAIN_DATA = constants.X_TRAIN_FILE_AND_PATH
@@ -52,7 +51,17 @@ print(f"Y_VAL_DATA: {Y_VAL_DATA}")
 #--------------------------------------------------------------------
 @dataclass
 class DataTransformationConfig:
+    """
+    Configuration for Data Transformation
+    """
     target_column: str = TARGET_COLUMN
+    model_dir: str = MODEL_DIR
+    log_dir: str = LOG_DIR
+    raw_data: str = RAW_DATA
+    processed_data: str = PROCESSED_DATA
+    pikle_model_data: str = PIKLE_FILE
+    X_data: str = X_DATA
+    y_data: str = Y_DATA
     x_train_data: str = X_TRAIN_DATA
     x_valid_data: str = X_VAL_DATA
     x_test_data: str = X_TEST_DATA
@@ -84,6 +93,7 @@ class DataTransformation:
             target_col = self.transformation_config.target_column
             print(f"Target Column: {target_col}")
             numerical_features, categorical_features =  utils.list_dataframe_columns_by_type(df)
+            #
             preprocessor = utils.create_data_transformation_pipelines(numerical_features, categorical_features)
             # feature_names = preprocessor.get_feature_names_out()
             # app_logger.info("Feature names after transformation: %s", feature_names)

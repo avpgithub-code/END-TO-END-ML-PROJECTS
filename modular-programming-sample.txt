@@ -1,0 +1,133 @@
+config_entity.py:
+-----------------------------------------------------------------------
+from dataclasses import dataclass
+from pathlib import Path
+
+@dataclass(frozen=True)
+class DataIngestionConfig:
+    raw_data_path: Path
+    processed_dir: Path
+    test_size: float = 0.15
+    valid_size: float = 0.15
+    random_state: int = 42
+    target_column: str = "math_score"
+
+@dataclass(frozen=True)
+class DataTransformationConfig:
+    preprocessor_obj_path: Path
+    numerical_cols: list
+    categorical_cols: list
+-----------------------------------------------------------------------
+data_ingestion.py:
+-----------------------------------------------------------------------
+import pandas as pd
+from sklearn.model_selection import train_test_split
+from .config_entity import DataIngestionConfig
+
+class DataIngestion:
+    def __init__(self, config: DataIngestionConfig):
+        self.config = config
+
+    def initiate_data_ingestion(self):
+        """Loads raw data and performs chronological splitting."""
+        df = pd.read_csv(self.config.raw_data_path)
+        
+        # Chronological Split Step 1: Hold-out Test Set
+        train_val_df, test_df = train_test_split(
+            df, 
+            test_size=self.config.test_size, 
+            random_state=self.config.random_state
+        )
+        
+        # Chronological Split Step 2: Training vs Validation
+        # Adjusted ratio to maintain 15% of total as Validation
+        val_relative_size = self.config.valid_size / (1 - self.config.test_size)
+        train_df, val_df = train_test_split(
+            train_val_df, 
+            test_size=val_relative_size, 
+            random_state=self.config.random_state
+        )
+
+        return train_df, val_df, test_df
+-----------------------------------------------------------------------
+data_transformation.py
+-----------------------------------------------------------------------
+import pandas as pd
+import joblib
+from sklearn.preprocessing import StandardScaler, OneHotEncoder
+from sklearn.impute import SimpleImputer
+from sklearn.compose import ColumnTransformer
+from sklearn.pipeline import Pipeline
+from .config_entity import DataIngestionConfig, DataTransformationConfig
+
+class DataTransformation:
+    def __init__(self, ingestion_config: DataIngestionConfig, trans_config: DataTransformationConfig):
+        self.ingestion_config = ingestion_config
+        self.trans_config = trans_config
+
+    def get_transformer_object(self) -> ColumnTransformer:
+        """Defines preprocessing pipelines for 2025 standards."""
+        num_pipeline = Pipeline([
+            ("imputer", SimpleImputer(strategy="median")),
+            ("scaler", StandardScaler())
+        ])
+        cat_pipeline = Pipeline([
+            ("imputer", SimpleImputer(strategy="most_frequent")),
+            ("onehot", OneHotEncoder(handle_unknown="ignore", sparse_output=False))
+        ])
+
+        return ColumnTransformer([
+            ("num", num_pipeline, self.trans_config.numerical_cols),
+            ("cat", cat_pipeline, self.trans_config.categorical_cols)
+        ])
+
+    def initiate_transformation(self, train_df, val_df, test_df):
+        target_col = self.ingestion_config.target_column
+        
+        # Separate features and target
+        X_train, y_train = train_df.drop(columns=[target_col]), train_df[target_col]
+        X_val, y_val     = val_df.drop(columns=[target_col]), val_df[target_col]
+        X_test, y_test   = test_df.drop(columns=[target_col]), test_df[target_col]
+
+        # Fit Transformer ONLY on Training Data (Prevention of Leakage)
+        transformer = self.get_transformer_object()
+        X_train_arr = transformer.fit_transform(X_train)
+        
+        # Apply trained parameters to Validation and Test
+        X_val_arr  = transformer.transform(X_val)
+        X_test_arr = transformer.transform(X_test)
+
+        # Persistence
+        self.ingestion_config.processed_dir.mkdir(parents=True, exist_ok=True)
+        joblib.dump(transformer, self.trans_config.preprocessor_obj_path)
+
+        # Save Canonical Splits
+        pd.DataFrame(X_train_arr).to_csv(self.ingestion_config.processed_dir / "X_train.csv", index=False)
+        y_train.to_csv(self.ingestion_config.processed_dir / "y_train.csv", index=False)
+        # ... repeat for val/test
+        
+        print(f"Artifacts saved to {self.ingestion_config.processed_dir}")
+-----------------------------------------------------------------------
+main.py
+-----------------------------------------------------------------------
+from myproject.constants import RAW_DIR, PROCESSED_DIR, MODELS_DIR
+from myproject.components.data_ingestion import DataIngestion
+from myproject.components.data_transformation import DataTransformation
+
+# Initialize Configs
+ingestion_cfg = DataIngestionConfig(raw_data_path=RAW_DIR / "stud.csv", processed_dir=PROCESSED_DIR)
+trans_cfg = DataTransformationConfig(
+    preprocessor_obj_path=MODELS_DIR / "preprocessor.joblib",
+    numerical_cols=["reading_score", "writing_score"],
+    categorical_cols=["gender", "race_ethnicity"]
+)
+
+# Step 1: Ingest and Split (Unprocessed)
+ingestion = DataIngestion(ingestion_cfg)
+train, val, test = ingestion.initiate_data_ingestion()
+
+# Step 2: Transform and Save (Processed)
+transformation = DataTransformation(ingestion_cfg, trans_cfg)
+transformation.initiate_transformation(train, val, test)
+
+
