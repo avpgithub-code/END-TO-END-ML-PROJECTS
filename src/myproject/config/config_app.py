@@ -21,13 +21,16 @@ from src.myproject import constants
 class AppConfig:
     """Centralized, immutable configuration object."""
     #-----------------------------------------------------------------
-    # Fixed standards from constants
+    # Mapping directly to pre-resolved constants
+    #-----------------------------------------------------------------
     raw_path: Path = constants.RAW_DIR
     raw_file: str = constants.DATA_RAW_FILE
     raw_file_and_path: Path = constants.DATA_RAW_FILE_AND_PATH
     print("Raw Data File and Path:", raw_file_and_path)
     print("Raw Data Directory Path:", raw_path)
     print("Raw Data File Name:", raw_file)
+    #-----------------------------------------------------------------
+    # Environment-specific variables with safe casting
     #-----------------------------------------------------------------
     target_column: str = constants.TARGET_COLUMN
     test_size: float = constants.TEST_SIZE
@@ -48,20 +51,25 @@ class DataIngestionConfig(AppConfig):
     #----------------------------------------------------------------
     # Use Path instead of str to maintain object-oriented functionality
     #----------------------------------------------------------------
+    # Directory Paths
+    #----------------------------------------------------------------
     processed_dir_path: Path = constants.PROCESSED_DIR
     logs_dir_path: Path = constants.LOGS_DIR
     models_dir_path: Path = constants.MODELS_DIR
     plots_dir_path: Path = constants.PLOTS_DIR
     #----------------------------------------------------------------
+    # Caononical File Paths
+    #----------------------------------------------------------------
     data: Path = constants.DATA_PROCESSED_FILE_AND_PATH
     input_feature_data: Path = constants.X_FILE_AND_PATH
     target_feature_data: Path = constants.Y_FILE_AND_PATH
     pickled_object_file_path: Path = constants.PICKLE_FILE_AND_PATH
+    #---------------------------------------------------------------s-
+    # Data Split Paths: Train, Validation, Test
     #----------------------------------------------------------------
     x_train_data: Path = constants.X_TRAIN_FILE_AND_PATH
     x_val_data: Path = constants.X_VAL_FILE_AND_PATH
     x_test_data: Path = constants.X_TEST_FILE_AND_PATH
-    #----------------------------------------------------------------
     y_train_data: Path = constants.Y_TRAIN_FILE_AND_PATH
     y_val_data: Path = constants.Y_VAL_FILE_AND_PATH
     y_test_data: Path = constants.Y_TEST_FILE_AND_PATH

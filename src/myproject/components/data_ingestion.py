@@ -22,6 +22,9 @@ logger.app_logger.info("Data Ingestion Module Loaded Successfully. Initiating Da
 #------------------------------------------------------------------
 # Main execution block for data ingestion
 #------------------------------------------------------------------
+"""Data Ingestion Class.
+This class handles data ingestion from various sources.
+"""
 class DataIngestion:
     def __init__(self, config: DataIngestionConfig):
         self.ingestion_config = config
@@ -54,7 +57,26 @@ class DataIngestion:
         except exception.CustomException as ce:
             exc_type, exc_value, exc_traceback = sys.exc_info()
             raise exception.CustomException(exc_type, exc_value, exc_traceback) from ce
-
+    def save_ingested_data(self, data, X, y):
+        """Save the training and testing data splits to their respective paths."""
+        try:
+            #----------------------------------------------------------------
+            # Save Processed Data, X and y to their respective file paths
+            #----------------------------------------------------------------
+            utils.ensure_directory_exists(self.ingestion_config.processed_dir_path)
+            # Save training data
+            data.to_csv(self.ingestion_config.data, index=False)
+            X.to_csv(self.ingestion_config.input_feature_data, index=False)
+            y.to_csv(self.ingestion_config.target_feature_data, index=False)
+            #----------------------------------------------------------------
+            logger.app_logger.info("Processed Data - data, X, y - Saved Successfully.")
+            logger.app_logger.info("Processed Data shape: %s", data.shape)
+            logger.app_logger.info("Input Feature Data (X) shape: %s", X.shape)
+            logger.app_logger.info("Target Feature Data (y) shape: %s", y.shape)
+            logger.app_logger.info("Data ingestion - save_ingested_data() completed successfully.")
+        except exception.CustomException as ce:
+            exc_type, exc_value, exc_traceback = sys.exc_info()
+            raise exception.CustomException(exc_type, exc_value, exc_traceback) from ce
     def train_test_split_data(self, X: pd.DataFrame, y: pd.Series):
         """Split the data into training, validation, and testing sets."""
         try:
@@ -69,7 +91,10 @@ class DataIngestion:
     def save_data_splits(self, X_train, y_train, X_val, y_val, X_test, y_test):
         """Save the training and testing data splits to their respective paths."""
         try:
+            #----------------------------------------------------------------
+            # Save training and testing data to their respective file paths
             # Ensure directories exist
+            #----------------------------------------------------------------
             utils.ensure_directory_exists(self.ingestion_config.processed_dir_path)
             # Save training data
             X_train.to_csv(self.ingestion_config.x_train_data, index=False)
@@ -91,29 +116,5 @@ class DataIngestion:
             exc_type, exc_value, exc_traceback = sys.exc_info()
             raise exception.CustomException(exc_type, exc_value, exc_traceback) from ce
         
-if __name__ == "__main__":
-    try:
-        #----------------------------------------------------------------
-        # Initialize data ingestion configuration and class
-        #----------------------------------------------------------------
-        ingestion_config = DataIngestionConfig()
-        data_ingestion = DataIngestion(config=ingestion_config)
-        #----------------------------------------------------------------
-        # Initite data ingestion from RAW file source and return as DataFrame
-        #----------------------------------------------------------------
-        raw_df,X,y = data_ingestion.initiate_data_ingestion_from_file()
-        #----------------------------------------------------------------
-        # Split the Dataframe into Training and Testing sets
-        # #----------------------------------------------------------------
-        (X_train, y_train), (X_val, y_val), (X_test, y_test) = data_ingestion.train_test_split_data(X,y)
-        logger.app_logger.info("Data split into training, validation and testing sets successfully.")
-        # #----------------------------------------------------------------
-        # # Save the training and testing data to their respective paths
-        # #----------------------------------------------------------------
-        data_ingestion.save_data_splits(X_train, y_train, X_val, y_val, X_test, y_test)
-        logger.app_logger.info("Data ingestion process completed successfully.")
-    except exception.CustomException as ce:
-        logger.app_logger.error("An error occurred during data ingestion: %s", ce)
-        exc_type, exc_value, exc_traceback = sys.exc_info()
-        raise exception.CustomException(exc_type, exc_value, exc_traceback) from ce
+#------------------------------------------------------------------
         
