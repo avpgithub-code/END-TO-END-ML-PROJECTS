@@ -6,24 +6,22 @@ to a file with a maximum size and backup count.
 import logging
 import os
 from pathlib import Path
-from dotenv import load_dotenv
 from logging.handlers import RotatingFileHandler
 from datetime import datetime
 from src.myproject.utils  import ensure_directory_exists
 import src.myproject.constants as constants
 #-----------------------------------------------------------------------------
-# Load environment variables
-load_dotenv()
+# Load environment variables for logger configuration
 #-----------------------------------------------------------------------------
 BASE_DIR = constants.PROJECT_ROOT
 LOG_DIR = constants.LOGS_DIR
 #-----------------------------------------------------------------------------
-LOG_FILE_MAX_BYTES = int(os.getenv("LOG_FILE_MAX_BYTES", 5242880))
-LOG_FILE_BACKUP_COUNT = int(os.getenv("LOG_FILE_BACKUP_COUNT", 3))
+LOG_FILE_MAX_BYTES = constants.LOG_FILE_MAX_BYTES
+LOG_FILE_BACKUP_COUNT = constants.LOG_FILE_BACKUP_COUNT
 #-----------------------------------------------------------------------------
 # Print configuration for verification
 #-----------------------------------------------------------------------------
-print(f"Base Directory: {BASE_DIR}")
+print(f"Root Directory: {BASE_DIR}")
 print(f"Log Directory: {LOG_DIR}")
 print(f"LOG_FILE_MAX_BYTES: {LOG_FILE_MAX_BYTES}")
 print(f"LOG_FILE_BACKUP_COUNT: {LOG_FILE_BACKUP_COUNT}")

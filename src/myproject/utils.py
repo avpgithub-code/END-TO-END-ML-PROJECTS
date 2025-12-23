@@ -4,12 +4,13 @@ This module provides utility functions used across the application,
 such as ensuring the existence of directories.
 """
 import os
-from pathlib import Path
 import sys
 import pandas as pd
-from sklearn.compose import ColumnTransformer
+from pathlib import Path
+from sklearn import set_config
 from sklearn.pipeline import Pipeline
 from sklearn.impute import SimpleImputer
+from sklearn.compose import ColumnTransformer
 from sklearn.model_selection import train_test_split
 from sklearn.preprocessing import StandardScaler, OneHotEncoder
 #------------------------------------------------------------------
@@ -91,6 +92,8 @@ def list_dataframe_columns_by_type(df: pd.DataFrame):
     # 'number' includes both integers and floats
     #----------------------------------------------------
     numerical_cols = df.select_dtypes(include=['number']).columns.tolist()
+    if constants.TARGET_COLUMN in numerical_cols:
+        numerical_cols.remove(constants.TARGET_COLUMN)
     #----------------------------------------------------
     # 'object' is standard for characters/strings in 2025
     # 'category' is also included for categorical types
@@ -101,7 +104,7 @@ def list_dataframe_columns_by_type(df: pd.DataFrame):
 #--------------------------------------------------------------------
 # Perform Data Transformation Pipelines
 #--------------------------------------------------------------------
-def create_data_transformation_pipelines(numerical_features, categorical_features):
+def create_data_transformation_object(numerical_features, categorical_features) -> ColumnTransformer:
     """
     Creates and returns data transformation pipelines for numerical and categorical features.
     """
@@ -110,6 +113,8 @@ def create_data_transformation_pipelines(numerical_features, categorical_feature
         #----------------------------------------------------------------
         # Define transformers for numerical and categorical features
         #----------------------------------------------------------------
+        set_config(transform_output="pandas") # Ensures output is a DataFrame
+        #----------------------------------------------------------------
         numerical_transformer = Pipeline(steps=[
             ('imputer', SimpleImputer(strategy='median')),
             ('scaler', StandardScaler())
@@ -117,7 +122,8 @@ def create_data_transformation_pipelines(numerical_features, categorical_feature
         #----------------------------------------------------------------
         categorical_transformer = Pipeline(steps=[
             ('imputer', SimpleImputer(strategy='most_frequent')),
-            ('onehot', OneHotEncoder(handle_unknown='ignore'))
+            # Standard: Set sparse_output=False to enable Pandas DataFrame output
+            ('onehot', OneHotEncoder(handle_unknown='ignore', sparse_output=False))
         ])
         #----------------------------------------------------------------
         # Combine transformers into a ColumnTransformer
@@ -128,8 +134,8 @@ def create_data_transformation_pipelines(numerical_features, categorical_feature
             transformers=[
                 ('cat', categorical_transformer, categorical_features),
                 ('num', numerical_transformer, numerical_features)
-                
-            ])
+            ],sparse_threshold=0 # Ensures output is a DataFrame
+        )
         #----------------------------------------------------------------
         # logger.app_logger.info("Data transformation pipelines created successfully.")
         #----------------------------------------------------------------

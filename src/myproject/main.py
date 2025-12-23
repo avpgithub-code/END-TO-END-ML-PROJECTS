@@ -4,22 +4,20 @@ executes the data ingestion process, and handles exceptions.
 """
 import sys
 import pandas as pd
-from src.myproject.config.config_app import DataIngestionConfig
-from src.myproject.components.data_ingestion import DataIngestion
-# from src.myproject.components.data_transformation import DataTransformation
 import src.myproject.logger as logger
 import src.myproject.exception as exception
+from src.myproject.components.data_ingestion import DataIngestion
+from src.myproject.components.data_transformation import DataTransformation
 #------------------------------------------------------------------
 # Main function to orchestrate data ingestion
 #------------------------------------------------------------------
-
 def main():
     try:
         #----------------------------------------------------------------
         # Initialize data ingestion configuration and class
         #----------------------------------------------------------------
-        ingestion_config = DataIngestionConfig()
-        data_ingestion = DataIngestion(config=ingestion_config)
+        data_ingestion = DataIngestion()
+        data_transformation = DataTransformation()
         #----------------------------------------------------------------
         # Initite data ingestion from RAW file source and return as DataFrame
         #----------------------------------------------------------------
@@ -35,6 +33,23 @@ def main():
         # #----------------------------------------------------------------
         data_ingestion.save_data_splits(X_train, y_train, X_val, y_val, X_test, y_test)
         logger.app_logger.info("Data ingestion process completed successfully.")
+        #----------------------------------------------------------------
+        # Initialize Data Transformation Component
+        #----------------------------------------------------------------
+        data_transformation = DataTransformation()
+        #----------------------------------------------------------------
+        # Get Data Transformer Object
+        #----------------------------------------------------------------
+        logger.app_logger.info("Creating Data Transformation Preprocessor Object...")
+        preprocessor = data_transformation.get_data_transformer_object(raw_df)
+        logger.app_logger.info("Data Transformation Preprocessor Object created successfully.")
+        #----------------------------------------------------------------
+        # Initiate Data Transformation Process
+        #----------------------------------------------------------------
+        logger.app_logger.info("Starting Data Transformation process...")
+        data_transformation.initiate_data_transformation(
+            preprocessor_object=preprocessor, x_train=X_train, x_val=X_val, x_test=X_test)
+        logger.app_logger.info("Data Transformation process completed successfully.")
     except exception.CustomException as ce:
         logger.app_logger.error("An error occurred during data ingestion: %s", ce)
         exc_type, exc_value, exc_traceback = sys.exc_info()

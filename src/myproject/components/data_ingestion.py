@@ -26,9 +26,10 @@ logger.app_logger.info("Data Ingestion Module Loaded Successfully. Initiating Da
 This class handles data ingestion from various sources.
 """
 class DataIngestion:
-    def __init__(self, config: DataIngestionConfig):
-        self.ingestion_config = config
-
+    def __init__(self):
+        """Initialize DataIngestion with configuration."""
+        self.ingestion_config = DataIngestionConfig()
+    #-----------------------------------------------------------------
     def initiate_data_ingestion_from_file(self) -> pd.DataFrame:
         """Ingest data from the raw data file specified in the configuration."""
         try:
@@ -57,6 +58,7 @@ class DataIngestion:
         except exception.CustomException as ce:
             exc_type, exc_value, exc_traceback = sys.exc_info()
             raise exception.CustomException(exc_type, exc_value, exc_traceback) from ce
+    #-----------------------------------------------------------------
     def save_ingested_data(self, data, X, y):
         """Save the training and testing data splits to their respective paths."""
         try:
@@ -65,9 +67,9 @@ class DataIngestion:
             #----------------------------------------------------------------
             utils.ensure_directory_exists(self.ingestion_config.processed_dir_path)
             # Save training data
-            data.to_csv(self.ingestion_config.data, index=False)
-            X.to_csv(self.ingestion_config.input_feature_data, index=False)
-            y.to_csv(self.ingestion_config.target_feature_data, index=False)
+            data.to_csv(self.ingestion_config.data, index=False, header=True, encoding='utf-8')
+            X.to_csv(self.ingestion_config.input_feature_data, index=False, header=True, encoding='utf-8')
+            y.to_csv(self.ingestion_config.target_feature_data, index=False, header=True, encoding='utf-8')
             #----------------------------------------------------------------
             logger.app_logger.info("Processed Data - data, X, y - Saved Successfully.")
             logger.app_logger.info("Processed Data shape: %s", data.shape)
@@ -77,6 +79,7 @@ class DataIngestion:
         except exception.CustomException as ce:
             exc_type, exc_value, exc_traceback = sys.exc_info()
             raise exception.CustomException(exc_type, exc_value, exc_traceback) from ce
+    #-----------------------------------------------------------------
     def train_test_split_data(self, X: pd.DataFrame, y: pd.Series):
         """Split the data into training, validation, and testing sets."""
         try:
@@ -87,7 +90,7 @@ class DataIngestion:
         except exception.CustomException as ce:
             exc_type, exc_value, exc_traceback = sys.exc_info()
             raise exception.CustomException(exc_type, exc_value, exc_traceback) from ce
-
+    #-----------------------------------------------------------------
     def save_data_splits(self, X_train, y_train, X_val, y_val, X_test, y_test):
         """Save the training and testing data splits to their respective paths."""
         try:
@@ -115,6 +118,5 @@ class DataIngestion:
         except exception.CustomException as ce:
             exc_type, exc_value, exc_traceback = sys.exc_info()
             raise exception.CustomException(exc_type, exc_value, exc_traceback) from ce
-        
 #------------------------------------------------------------------
         

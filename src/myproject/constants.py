@@ -89,6 +89,9 @@ X_VAL_FILE = "X_val.csv"
 Y_VAL_FILE = "y_val.csv"
 X_TEST_FILE = "X_test.csv"
 Y_TEST_FILE = "y_test.csv"
+X_TRANSFORMED_FILE = "X_transformed.csv"
+X_VAL_TRANSFORMED_FILE = "X_val_transformed.csv"
+X_TEST_TRANSFORMED_FILE = "X_test_transformed.csv"
 PICKLE_FILE = "preprocessor.pkl"
 #----------------------------------------------------------------------------------------------------
 # 5. Final Absolute File Paths
@@ -104,6 +107,10 @@ X_VAL_FILE_AND_PATH = (PROCESSED_DIR / X_VAL_FILE).resolve()
 Y_VAL_FILE_AND_PATH = (PROCESSED_DIR / Y_VAL_FILE).resolve()
 X_TEST_FILE_AND_PATH = (PROCESSED_DIR / X_TEST_FILE).resolve()
 Y_TEST_FILE_AND_PATH = (PROCESSED_DIR / Y_TEST_FILE).resolve()
+X_TRANSFORMED_FILE_AND_PATH = (PROCESSED_DIR / X_TRANSFORMED_FILE).resolve()
+X_VAL_TRANSFORMED_FILE_AND_PATH = (PROCESSED_DIR / X_VAL_TRANSFORMED_FILE).resolve()
+X_TEST_TRANSFORMED_FILE_AND_PATH = (PROCESSED_DIR / X_TEST_TRANSFORMED_FILE).resolve()
+#----------------------------------------------------------------------------------------------------
 print(f"DATA_RAW_FILE_AND_PATH: {DATA_RAW_FILE_AND_PATH}")
 print(f"DATA_PROCESSED_FILE_AND_PATH: {DATA_PROCESSED_FILE_AND_PATH}")
 print(f"X_FILE_AND_PATH: {X_FILE_AND_PATH}")
