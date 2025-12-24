@@ -73,6 +73,7 @@ load_dotenv(PROJECT_ROOT / ".env")
 # 4. Canonical filename Constants (Relative to their directories)
 #----------------------------------------------------------------------------------------------------
 DATA_RAW_FILE = os.getenv("RAW_DATA_SOURCE", "stud.csv") # Default to "stud.csv" if not set
+CHAMPION_MODEL_NAME = os.getenv("CHAMPION_MODEL_NAME", "champion_model.joblib")
 TEST_SIZE = float(os.getenv("TEST_SIZE", 0.2))
 TEST_SIZE_VAL = float(os.getenv("TEST_SIZE_VAL", 0.1))
 RANDOM_STATE = int(os.getenv("RANDOM_STATE", 42))
@@ -92,13 +93,15 @@ Y_TEST_FILE = "y_test.csv"
 X_TRANSFORMED_FILE = "X_transformed.csv"
 X_VAL_TRANSFORMED_FILE = "X_val_transformed.csv"
 X_TEST_TRANSFORMED_FILE = "X_test_transformed.csv"
-PICKLE_FILE = "preprocessor.pkl"
+JOBLIB_FILE = "preprocessor.joblib"
 #----------------------------------------------------------------------------------------------------
 # 5. Final Absolute File Paths
 #----------------------------------------------------------------------------------------------------
 DATA_RAW_FILE_AND_PATH = (RAW_DIR / DATA_RAW_FILE).resolve()
 DATA_PROCESSED_FILE_AND_PATH = (PROCESSED_DIR / DATA_PROCESSED_FILE).resolve()
-PICKLE_FILE_AND_PATH = (MODELS_DIR / PICKLE_FILE).resolve()
+JOBLIB_FILE_AND_PATH = (MODELS_DIR / JOBLIB_FILE).resolve()
+CHAMPION_MODEL_AND_PATH = (MODELS_DIR / CHAMPION_MODEL_NAME).resolve()
+#----------------------------------------------------------------------------------------------------
 X_FILE_AND_PATH = (PROCESSED_DIR / X_FILE).resolve()
 Y_FILE_AND_PATH = (PROCESSED_DIR / Y_FILE).resolve()
 X_TRAIN_FILE_AND_PATH = (PROCESSED_DIR / X_TRAIN_FILE).resolve()
@@ -113,6 +116,8 @@ X_TEST_TRANSFORMED_FILE_AND_PATH = (PROCESSED_DIR / X_TEST_TRANSFORMED_FILE).res
 #----------------------------------------------------------------------------------------------------
 print(f"DATA_RAW_FILE_AND_PATH: {DATA_RAW_FILE_AND_PATH}")
 print(f"DATA_PROCESSED_FILE_AND_PATH: {DATA_PROCESSED_FILE_AND_PATH}")
+print(f"JOBLIB_FILE_AND_PATH: {JOBLIB_FILE_AND_PATH}")
+print(f"CHAMPION_MODEL_AND_PATH: {CHAMPION_MODEL_AND_PATH}")
 print(f"X_FILE_AND_PATH: {X_FILE_AND_PATH}")
 print(f"Y_FILE_AND_PATH: {Y_FILE_AND_PATH}")
 print(f"X_TRAIN_FILE_AND_PATH: {X_TRAIN_FILE_AND_PATH}")

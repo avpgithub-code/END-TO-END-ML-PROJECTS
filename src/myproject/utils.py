@@ -136,6 +136,7 @@ def create_data_transformation_object(numerical_features, categorical_features) 
                 ('num', numerical_transformer, numerical_features)
             ],sparse_threshold=0 # Ensures output is a DataFrame
         )
+        preprocessor.set_output(transform="pandas") # Ensures output is a DataFrame
         #----------------------------------------------------------------
         # logger.app_logger.info("Data transformation pipelines created successfully.")
         #----------------------------------------------------------------

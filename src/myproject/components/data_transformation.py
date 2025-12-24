@@ -53,9 +53,9 @@ class DataTransformation:
         # Save the preprocessor object
         #----------------------------------------------------------------
         logger.app_logger.info("Saving the preprocessor object...")
-        utils.ensure_directory_exists(self.transform_config.pickled_object_file_path.parent)
-        joblib.dump(preprocessor_object, self.transform_config.pickled_object_file_path)
-        logger.app_logger.info("Preprocessor object saved at: %s", self.transform_config.pickled_object_file_path)
+        utils.ensure_directory_exists(self.transform_config.joblib_object_file_path.parent)
+        joblib.dump(preprocessor_object, self.transform_config.joblib_object_file_path)
+        logger.app_logger.info("Preprocessor object saved at: %s", self.transform_config.joblib_object_file_path)
         #----------------------------------------------------------------
         # Save canonical processed CSVs
         #----------------------------------------------------------------

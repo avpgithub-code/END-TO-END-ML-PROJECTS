@@ -5,9 +5,10 @@ This module defines configuration parameters used throughout the application.
 #------------------------------------------------------------------
 # Import necessary Standard and 3rd party libraries
 #------------------------------------------------------------------
-import os
 from pathlib import Path
-from dataclasses import dataclass
+from dataclasses import dataclass, field
+from sklearn.linear_model import LinearRegression, Ridge, Lasso
+from sklearn.ensemble import RandomForestRegressor, GradientBoostingRegressor
 #------------------------------------------------------------------
 # Import constants module
 #------------------------------------------------------------------
@@ -82,8 +83,79 @@ class DataTransformationConfig(AppConfig):
     # Example configuration parameters for data transformation
     #----------------------------------------------------------------
     models_dir_path: Path = constants.MODELS_DIR
-    pickled_object_file_path: Path = constants.PICKLE_FILE_AND_PATH
+    joblib_object_file_path: Path = constants.JOBLIB_FILE_AND_PATH
     x_transformed_data: Path = constants.X_TRANSFORMED_FILE_AND_PATH
     x_val_transformed_data: Path = constants.X_VAL_TRANSFORMED_FILE_AND_PATH
     x_test_transformed_data: Path = constants.X_TEST_TRANSFORMED_FILE_AND_PATH
+#----------------------------------------------------------------
+@dataclass(frozen=True)
+class ModelTrainerConfig(AppConfig):
+    """Model Trainer Configuration Class using 2025 standards."""
+    #----------------------------------------------------------------
+    # Example configuration parameters for model training
+    #----------------------------------------------------------------
+    models_dir_path: Path = constants.MODELS_DIR
+    joblib_object_file_path: Path = constants.JOBLIB_FILE_AND_PATH
+    champion_model_path: Path = constants.MODELS_DIR
+    champion_model_and_path: Path = constants.CHAMPION_MODEL_AND_PATH
+    #----------------------------------------------------------------
+    # Define Hyperparameter grids separately for each model
+    #----------------------------------------------------------------
+    model_hyperparameters: dict = field(default_factory=lambda: {
+        "LinearRegression": {
+            "model": LinearRegression(),
+            "params": {} # LinearRegression has no hyperparameters to tune via GridSearch
+        },
+        "Ridge": {
+            "model": Ridge(),
+            "params": {
+                "alpha": [0.1, 1.0, 10.0],
+                "solver": ["auto", "svd", "cholesky", "lsqr"],
+                "fit_intercept": [True, False]
+            }
+        },
+        "Lasso": {
+            "model": Lasso(),
+            "params": {
+                "alpha": [0.01, 0.1, 1.0],
+                "fit_intercept": [True, False],
+                "max_iter": [1000, 5000, 10000]
+            }
+        },
+        "RandomForestRegressor": {
+            "model": RandomForestRegressor(),
+            "params":{
+                "n_estimators": [25,50,75,100,150,200],
+                "max_depth": [None, 5,10,15,20,25],
+                "min_samples_split": [2,3,5]
+            }
+        },
+        "GradientBoostingRegressor": {
+            "model": GradientBoostingRegressor(),
+                "params": {
+                "n_estimators": [35,50,70,90,100,150,200],
+                "learning_rate": [0.01, 0.1],
+                "max_depth": [3,5,7]
+            }
+        }
+    })
+    print("Model Hyperparameters:", model_hyperparameters)
+#----------------------------------------------------------------
+@dataclass(frozen=True)
+class ModelEvaluationConfig(AppConfig):
+    """Model Evaluation Configuration Class using 2025 standards."""
+    #----------------------------------------------------------------
+    # Example configuration parameters for model evaluation
+    #----------------------------------------------------------------
+    champion_model_path: Path = constants.CHAMPION_MODEL_AND_PATH
+#----------------------------------------------------------------
+@dataclass(frozen=True)
+class PredictionPipelineConfig(AppConfig):
+    """Prediction Pipeline Configuration Class using 2025 standards."""
+    #----------------------------------------------------------------
+    # Example configuration parameters for prediction pipeline
+    #----------------------------------------------------------------
+    preprocessor_file_path: Path = constants.JOBLIB_FILE_AND_PATH
+    champion_model_file_path: Path = constants.CHAMPION_MODEL_AND_PATH
+    
 
