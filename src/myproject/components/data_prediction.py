@@ -4,6 +4,9 @@ import joblib
 
 import src.myproject.exception as exception
 import src.myproject.logger as logger
+#------------------------------------------------------------------
+# Import Prediction Pipeline Config
+#------------------------------------------------------------------
 from src.myproject.config.config_app import PredictionPipelineConfig
 #------------------------------------------------------------------
 # Prediction Pipeline Class
