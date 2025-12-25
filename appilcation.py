@@ -48,7 +48,7 @@ def predict():
     #----------------------------------------------------------------
     transformed_data = preprocessor.transform(df)
     prediction = model.predict(transformed_data)
-    
+    #----------------------------------------------------------------
     return render_template('index.html', results=round(prediction[0], 2))
 
 if __name__ == "__main__":
